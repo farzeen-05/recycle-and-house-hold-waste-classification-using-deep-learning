@@ -17,7 +17,7 @@ app = Flask(__name__)
 CORS(app)
 
 # ── Config ────────────────────────────────────────────────────────────────────
-MODEL_PATH = 'fixed_model.h5'   # use your re-saved compatible model
+MODEL_PATH = 'fixed_model.keras'   # use your re-saved compatible model
 LABELS_PATH = 'class_names.json'
 IMG_SIZE = 128
 MAX_FILE_MB = 10
