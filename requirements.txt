@@ -1,6 +1,6 @@
 Flask==3.0.3
 gunicorn==22.0.0
-tensorflow-cpu==2.15.0
+tensorflow=2.15.0
 numpy==1.26.4
 pandas==2.2.2
 Pillow==10.2.0
