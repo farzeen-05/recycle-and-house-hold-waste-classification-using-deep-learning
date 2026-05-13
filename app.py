@@ -31,7 +31,10 @@ MAX_FILE_MB = 10
 
 # ── Load model & class names ──────────────────────────────────────────────────
 print('Loading model...')
-model = keras.models.load_model(MODEL_PATH)
+model = keras.models.load_model(
+    MODEL_PATH,
+    compile=False
+)
 print(f'✅ Model loaded: {MODEL_PATH}')
 
 with open(LABELS_PATH) as f:
