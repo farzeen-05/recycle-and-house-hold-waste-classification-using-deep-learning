@@ -7,3 +7,4 @@ Pillow==10.2.0
 opencv-python-headless==4.9.0.80
 scikit-learn==1.4.2
 h5py==3.10.0
+flask-cors==4.0.1
