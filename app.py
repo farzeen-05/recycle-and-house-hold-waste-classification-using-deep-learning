@@ -7,7 +7,7 @@ Rebuilds architecture from scratch, then matches weights
 by exact shape sequence using a greedy ordered scan.
 """
 
-import os, json, io, base64, h5py
+import os, json, io, base64, h5py, traceback
 import numpy as np
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -186,27 +186,62 @@ def predict():
     if len(data) > MAX_MB * 1024 * 1024:
         return jsonify({'error': f'Max {MAX_MB} MB'}), 413
     try:
-        preds    = model.predict(preprocess(data), verbose=0)[0]
+        # Preprocess
+        img_array = preprocess(data)
+        print(f'Input shape: {img_array.shape}, dtype: {img_array.dtype}', flush=True)
+
+        # Predict
+        preds = model.predict(img_array, verbose=0)[0]
+        print(f'Prediction done, top class idx: {int(np.argmax(preds))}, conf: {float(np.max(preds)):.3f}', flush=True)
+
         top5_idx = np.argsort(preds)[::-1][:5]
-        top5     = [{'class': CLASS_NAMES[i],
-                     'label': CLASS_NAMES[i].replace('_',' ').title(),
-                     'confidence': round(float(preds[i])*100, 2)} for i in top5_idx]
-        best  = CLASS_NAMES[top5_idx[0]]
-        meta  = WASTE_META.get(best, ('🗑️ General Waste','other','Check local disposal guidelines.'))
-        thumb = Image.open(io.BytesIO(data)).convert('RGB')
-        thumb.thumbnail((300,300))
-        buf = io.BytesIO(); thumb.save(buf, 'JPEG', quality=85)
-        return jsonify({
-            'success': True, 'top5': top5,
-            'best': {'class':best,'label':best.replace('_',' ').title(),
-                     'confidence':round(float(preds[top5_idx[0]])*100,2),
-                     'disposal':meta[0],'category':meta[1],'tip':meta[2],
-                     'color':CATEGORY_COLOR.get(meta[1],'#888')},
-            'thumbnail':'data:image/jpeg;base64,'+base64.b64encode(buf.getvalue()).decode(),
-            'model_info':{'name':'MobileNetV2','classes':len(CLASS_NAMES),'accuracy':'82.40%'}
-        })
+        top5 = [
+            {
+                'class': CLASS_NAMES[i],
+                'label': CLASS_NAMES[i].replace('_', ' ').title(),
+                'confidence': round(float(preds[i]) * 100, 2)
+            }
+            for i in top5_idx
+        ]
+        best = CLASS_NAMES[top5_idx[0]]
+        meta = WASTE_META.get(best, ('🗑️ General Waste', 'other', 'Check local disposal guidelines.'))
+
+        # Small thumbnail (skip if it causes issues)
+        try:
+            thumb = Image.open(io.BytesIO(data)).convert('RGB')
+            thumb.thumbnail((200, 200))
+            buf = io.BytesIO()
+            thumb.save(buf, 'JPEG', quality=70)
+            thumb_b64 = 'data:image/jpeg;base64,' + base64.b64encode(buf.getvalue()).decode()
+        except Exception:
+            thumb_b64 = ''
+
+        response = {
+            'success': True,
+            'top5': top5,
+            'best': {
+                'class':      best,
+                'label':      best.replace('_', ' ').title(),
+                'confidence': round(float(preds[top5_idx[0]]) * 100, 2),
+                'disposal':   meta[0],
+                'category':   meta[1],
+                'tip':        meta[2],
+                'color':      CATEGORY_COLOR.get(meta[1], '#888'),
+            },
+            'thumbnail':  thumb_b64,
+            'model_info': {
+                'name':     'MobileNetV2',
+                'classes':  len(CLASS_NAMES),
+                'accuracy': '82.40%'
+            }
+        }
+        print('Returning response OK', flush=True)
+        return jsonify(response), 200
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        tb = traceback.format_exc()
+        print(f'PREDICT ERROR:\n{tb}', flush=True)
+        return jsonify({'success': False, 'error': str(e), 'traceback': tb}), 500
 
 @app.route('/classes')
 def get_classes():
