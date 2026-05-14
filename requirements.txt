@@ -1,11 +1,14 @@
 Flask==3.0.3
 flask-cors==4.0.1
 gunicorn==22.0.0
-tensorflow==2.16.1
-keras==3.3.3
+tensorflow==2.15.0
+keras==2.15.0
 numpy==1.26.4
 pandas==2.2.2
 Pillow==10.2.0
 opencv-python-headless==4.9.0.80
 scikit-learn==1.4.2
 h5py==3.10.0
+# EcoSort AI — Render deployment requirements
+# Pinned to match Colab's TF/Keras versions to avoid deserialization errors
+
