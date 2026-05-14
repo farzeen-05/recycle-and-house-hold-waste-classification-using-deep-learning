@@ -9,7 +9,7 @@ by exact shape sequence using a greedy ordered scan.
 
 import os, json, io, base64, h5py
 import numpy as np
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from PIL import Image
 
@@ -173,7 +173,7 @@ def preprocess(image_bytes):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
