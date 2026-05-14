@@ -12,10 +12,10 @@ import numpy as np
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from PIL import Image
-
+import tensorflow as tf
 tf.config.set_visible_devices([], 'GPU')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import tensorflow as tf
+
 
 app  = Flask(__name__)
 CORS(app)
