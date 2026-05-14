@@ -29,189 +29,8 @@
   .nav-links a { font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s; }
   .nav-links a:hover { color:var(--green); }
   .nav-badge { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:var(--green);padding:6px 14px; }
-/* ─────────────────────────────────────────
-   MOBILE RESPONSIVE
-───────────────────────────────────────── */
 
-@media (max-width: 1024px){
-
-  nav{
-    padding:16px 24px;
-  }
-
-  .hero{
-    grid-template-columns:1fr;
-    padding:120px 24px 60px;
-    gap:40px;
-  }
-
-  .classifier-ui{
-    width:100%;
-    max-width:500px;
-    margin:auto;
-  }
-
-  .hero-stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .model-grid,
-  .usage-grid{
-    grid-template-columns:1fr;
-    gap:40px;
-  }
-
-  .pipeline{
-    grid-template-columns:1fr;
-  }
-
-  .pipeline-step{
-    border-right:none;
-    border-bottom:1px solid var(--border);
-  }
-
-  .pipeline-step::after{
-    display:none;
-  }
-
-  .classes-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-}
-
-@media (max-width: 768px){
-
-  body{
-    cursor:auto;
-  }
-
-  .cursor,
-  .cursor-ring{
-    display:none;
-  }
-
-  nav{
-    flex-direction:column;
-    gap:16px;
-    padding:14px 18px;
-  }
-
-  .nav-links{
-    gap:16px;
-    flex-wrap:wrap;
-    justify-content:center;
-  }
-
-  .nav-links a{
-    font-size:9px;
-  }
-
-  .hero{
-    padding:160px 18px 50px;
-  }
-
-  .hero-title{
-    font-size:42px;
-    line-height:1.05;
-  }
-
-  .hero-desc{
-    font-size:14px;
-  }
-
-  .hero-stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .stat-item{
-    padding:16px 10px;
-  }
-
-  .stat-number{
-    font-size:20px;
-  }
-
-  .classifier-ui{
-    padding:18px;
-  }
-
-  .upload-zone{
-    min-height:140px;
-  }
-
-  .classes-grid{
-    grid-template-columns:1fr;
-  }
-
-  section{
-    padding:70px 18px;
-  }
-
-  .section-title{
-    font-size:34px;
-  }
-
-  .section-sub{
-    font-size:14px;
-  }
-
-  .model-name{
-    font-size:26px;
-  }
-
-  .model-metrics{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .metric-val{
-    font-size:22px;
-  }
-
-  footer{
-    flex-direction:column;
-    gap:12px;
-    text-align:center;
-    padding:40px 20px;
-  }
-
-}
-
-@media (max-width: 480px){
-
-  .hero-title{
-    font-size:34px;
-  }
-
-  .hero-badge{
-    font-size:8px;
-    letter-spacing:1px;
-  }
-
-  .upload-text{
-    font-size:9px;
-  }
-
-  .hero-stats{
-    grid-template-columns:1fr;
-  }
-
-  .model-metrics{
-    grid-template-columns:1fr;
-  }
-
-  .result-tag{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:8px;
-  }
-
-  .class-report{
-    font-size:8px;
-  }
-
-}
-  /* HERO */
+  /* ─── HERO ─────────────────────────────────── */
   .hero { min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:120px 60px 80px;gap:60px;position:relative;overflow:hidden; }
   .hero::before { content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(74,222,128,.08) 0%,transparent 70%);pointer-events:none; }
   .hero-badge { display:inline-flex;align-items:center;gap:8px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);padding:6px 14px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:32px; }
@@ -226,8 +45,8 @@
   .stat-number { font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--green);letter-spacing:-1px; }
   .stat-label { font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px; }
 
-  /* CLASSIFIER WIDGET */
-  .classifier-ui { width:400px;background:var(--card);border:1px solid var(--border);padding:28px;position:relative; }
+  /* ─── CLASSIFIER WIDGET ─────────────────────── */
+  .classifier-ui { width:400px;max-width:100%;background:var(--card);border:1px solid var(--border);padding:28px;position:relative; }
   .ui-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border); }
   .ui-title { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted); }
   .ui-status { display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:9px;color:var(--green); }
@@ -240,7 +59,7 @@
   .upload-preview { width:100%;height:160px;object-fit:cover;display:none; }
   #fileInput { display:none; }
 
-  /* RESULT AREA */
+  /* ─── RESULT AREA ───────────────────────────── */
   .result-area { display:none; }
   .result-tag { padding:14px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between; }
   .result-main { font-family:'Syne',sans-serif;font-size:15px;font-weight:700; }
@@ -254,7 +73,7 @@
   .bar-track { height:5px;background:var(--border); }
   .bar-fill { height:100%;background:var(--green);animation:growBar .8s ease forwards; }
 
-  /* LOADING */
+  /* ─── LOADING ───────────────────────────────── */
   .loading { display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px 0; }
   .spinner { width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 1s linear infinite; }
   .loading-text { font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px; }
@@ -264,14 +83,14 @@
   .btn-reset { width:100%;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:transparent;color:var(--muted);border:1px solid var(--border);padding:10px;cursor:pointer;transition:all .2s;margin-top:8px; }
   .btn-reset:hover { border-color:var(--green);color:var(--green); }
 
-  /* SECTIONS */
+  /* ─── SECTIONS ──────────────────────────────── */
   section { padding:100px 60px; }
   .section-label { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:12px; }
   .section-label::before { content:'';width:30px;height:1px;background:var(--green); }
   .section-title { font-family:'Syne',sans-serif;font-size:clamp(30px,4vw,48px);font-weight:800;line-height:1.05;letter-spacing:-1.5px;margin-bottom:20px; }
   .section-sub { font-size:16px;line-height:1.7;color:var(--muted);max-width:540px; }
 
-  /* CLASSES GRID — 30 classes */
+  /* ─── CLASSES GRID ──────────────────────────── */
   .classes-section { background:var(--surface); }
   .classes-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px; }
   .class-card { background:var(--card);padding:20px 18px;transition:background .2s;cursor:default; }
@@ -286,8 +105,7 @@
   .tag-x { background:rgba(248,113,113,.15);color:var(--red); }
   .tag-t { background:rgba(192,132,252,.15);color:var(--purple); }
 
-  /* MODEL INFO */
-  .model-section {}
+  /* ─── MODEL INFO ────────────────────────────── */
   .model-grid { display:grid;grid-template-columns:1fr 1.2fr;gap:60px;margin-top:60px;align-items:start; }
   .model-card { background:var(--card);border:1px solid var(--border);padding:36px 32px;position:relative;overflow:hidden; }
   .model-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--lime)); }
@@ -302,7 +120,7 @@
   .cr-mid  { color:var(--amber); }
   .cr-low  { color:var(--red); }
 
-  /* PIPELINE */
+  /* ─── PIPELINE ──────────────────────────────── */
   .pipeline-section { background:var(--surface); }
   .pipeline { display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:60px;border:1px solid var(--border); }
   .pipeline-step { padding:32px 20px;border-right:1px solid var(--border);position:relative; }
@@ -314,8 +132,7 @@
   .step-desc { font-size:12px;line-height:1.6;color:var(--muted); }
   .step-tech { margin-top:10px;font-family:'Space Mono',monospace;font-size:9px;color:var(--green);letter-spacing:1px; }
 
-  /* HOW TO USE */
-  .usage-section {}
+  /* ─── HOW TO USE ────────────────────────────── */
   .usage-grid { display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:60px;align-items:start; }
   .usage-steps { display:flex;flex-direction:column;gap:0; }
   .usage-step { display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--border); }
@@ -326,16 +143,103 @@
   .file-structure { background:#0d150d;border:1px solid var(--border);padding:20px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.9;color:#a8d5a8; }
   .fs-dir{color:var(--green)} .fs-file{color:#a8d5a8} .fs-comment{color:#4a7a4a}
 
-  /* FOOTER */
+  /* ─── FOOTER ────────────────────────────────── */
   footer { padding:60px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
   .footer-logo { font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green); }
   .footer-text { font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px; }
 
   .fade-in{opacity:0;transform:translateY(24px);transition:all .7s ease}
   .fade-in.visible{opacity:1;transform:translateY(0)}
-
-  /* error */
   .error-msg{display:none;padding:10px 14px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red);font-family:'Space Mono',monospace;font-size:10px;margin-top:10px;}
+
+  /* ═══════════════════════════════════════════════
+     RESPONSIVE — TABLET (≤1024px)
+  ═══════════════════════════════════════════════ */
+  @media (max-width:1024px){
+    nav { padding:16px 24px; }
+
+    .hero {
+      grid-template-columns:1fr;
+      padding:120px 24px 60px;
+      gap:40px;
+    }
+
+    .classifier-ui {
+      width:100%;
+      max-width:500px;
+      margin:auto;
+    }
+
+    .hero-stats { grid-template-columns:repeat(2,1fr); }
+
+    .model-grid,
+    .usage-grid { grid-template-columns:1fr; gap:40px; }
+
+    .pipeline { grid-template-columns:1fr; }
+    .pipeline-step { border-right:none; border-bottom:1px solid var(--border); }
+    .pipeline-step::after { display:none; }
+
+    .classes-grid { grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* ═══════════════════════════════════════════════
+     RESPONSIVE — MOBILE (≤768px)
+  ═══════════════════════════════════════════════ */
+  @media (max-width:768px){
+    body { cursor:auto; }
+    .cursor, .cursor-ring { display:none; }
+
+    nav {
+      flex-direction:column;
+      gap:12px;
+      padding:14px 18px;
+    }
+    .nav-links { gap:14px; flex-wrap:wrap; justify-content:center; }
+    .nav-links a { font-size:9px; }
+    .nav-badge { font-size:9px; text-align:center; }
+
+    .hero {
+      grid-template-columns:1fr;
+      padding:160px 18px 50px;
+      gap:36px;
+    }
+    .hero-title { font-size:38px; line-height:1.05; }
+    .hero-desc { font-size:14px; }
+    .hero-stats { grid-template-columns:repeat(2,1fr); }
+    .stat-item { padding:14px 10px; }
+    .stat-number { font-size:20px; }
+
+    .classifier-ui { width:100%; padding:18px; }
+    .upload-zone { min-height:140px; }
+
+    section { padding:70px 18px; }
+    .section-title { font-size:30px; }
+    .section-sub { font-size:14px; }
+
+    .classes-grid { grid-template-columns:repeat(2,1fr); }
+
+    .model-name { font-size:26px; }
+    .model-metrics { grid-template-columns:1fr 1fr; }
+    .metric-val { font-size:22px; }
+    .class-report { font-size:8px; }
+
+    .result-tag { flex-direction:column; align-items:flex-start; gap:8px; }
+
+    footer { flex-direction:column; gap:12px; text-align:center; padding:40px 20px; }
+  }
+
+  /* ═══════════════════════════════════════════════
+     RESPONSIVE — SMALL PHONES (≤480px)
+  ═══════════════════════════════════════════════ */
+  @media (max-width:480px){
+    .hero-title { font-size:32px; }
+    .hero-badge { font-size:8px; letter-spacing:1px; }
+    .hero-stats { grid-template-columns:1fr 1fr; }
+
+    .upload-text { font-size:9px; }
+    .classes-grid { grid-template-columns:1fr; }
+    .model-metrics { grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
@@ -377,7 +281,6 @@
         <span class="ui-status"><span class="ui-status-dot"></span>Model Ready</span>
       </div>
 
-      <!-- Upload zone -->
       <div class="upload-zone" id="uploadZone">
         <img class="upload-preview" id="previewImg" alt="preview">
         <span class="upload-icon" id="uploadIcon">📷</span>
@@ -385,13 +288,11 @@
       </div>
       <input type="file" id="fileInput" accept="image/*">
 
-      <!-- Loading -->
       <div class="loading" id="loadingArea">
         <div class="spinner"></div>
         <div class="loading-text">CLASSIFYING...</div>
       </div>
 
-      <!-- Results -->
       <div class="result-area" id="resultArea">
         <div class="result-tag" id="resultTag">
           <span class="result-main" id="resultLabel">—</span>
@@ -401,7 +302,6 @@
         <div class="result-bars" id="resultBars"></div>
       </div>
 
-      <!-- Error -->
       <div class="error-msg" id="errorMsg"></div>
 
       <button class="btn-classify" id="btnClassify">🔍 Classify Waste</button>
@@ -416,32 +316,23 @@
   <h2 class="section-title">30 Waste Classes<br>Your Model Knows</h2>
   <p class="section-sub">Trained on 15,000 images across 30 detailed waste categories. Each class has ~500 training images covering default and real-world conditions.</p>
   <div class="classes-grid">
-    <!-- Metal -->
     <div class="class-card fade-in"><div class="class-emoji">🛢️</div><div class="class-name">Aerosol Cans</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-r">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🥫</div><div class="class-name">Aluminum Food Cans</div><div class="class-f1">F1: 0.54</div><div class="class-tag tag-r">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🥤</div><div class="class-name">Aluminum Soda Cans</div><div class="class-f1">F1: 0.79</div><div class="class-tag tag-r">Recyclable</div></div>
-    <!-- Paper -->
     <div class="class-card fade-in"><div class="class-emoji">📦</div><div class="class-name">Cardboard Boxes</div><div class="class-f1">F1: 0.63</div><div class="class-tag tag-r">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🗃️</div><div class="class-name">Cardboard Packaging</div><div class="class-f1">F1: 0.58</div><div class="class-tag tag-r">Recyclable</div></div>
-    <!-- Textile -->
     <div class="class-card fade-in"><div class="class-emoji">👕</div><div class="class-name">Clothing</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-t">Textile</div></div>
-    <!-- Organic -->
     <div class="class-card fade-in"><div class="class-emoji">☕</div><div class="class-name">Coffee Grounds</div><div class="class-f1">F1: 0.95</div><div class="class-tag tag-o">Compostable</div></div>
-    <!-- Plastic -->
     <div class="class-card fade-in"><div class="class-emoji">🍴</div><div class="class-name">Disposable Plastic Cutlery</div><div class="class-f1">F1: 0.91</div><div class="class-tag tag-x">General</div></div>
-    <!-- Organic -->
     <div class="class-card fade-in"><div class="class-emoji">🥚</div><div class="class-name">Eggshells</div><div class="class-f1">F1: 0.93</div><div class="class-tag tag-o">Compostable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🍌</div><div class="class-name">Food Waste</div><div class="class-f1">F1: 0.95</div><div class="class-tag tag-o">Compostable</div></div>
-    <!-- Glass -->
     <div class="class-card fade-in"><div class="class-emoji">🍾</div><div class="class-name">Glass Beverage Bottles</div><div class="class-f1">F1: 0.80</div><div class="class-tag tag-g">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🧴</div><div class="class-name">Glass Cosmetic Containers</div><div class="class-f1">F1: 0.85</div><div class="class-tag tag-g">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🫙</div><div class="class-name">Glass Food Jars</div><div class="class-f1">F1: 0.88</div><div class="class-tag tag-g">Recyclable</div></div>
-    <!-- Paper -->
     <div class="class-card fade-in"><div class="class-emoji">📰</div><div class="class-name">Magazines</div><div class="class-f1">F1: 0.92</div><div class="class-tag tag-r">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">📄</div><div class="class-name">Newspaper</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-r">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">📋</div><div class="class-name">Office Paper</div><div class="class-f1">F1: 0.76</div><div class="class-tag tag-r">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">☕</div><div class="class-name">Paper Cups</div><div class="class-f1">F1: 0.78</div><div class="class-tag tag-x">General</div></div>
-    <!-- Plastic -->
     <div class="class-card fade-in"><div class="class-emoji">🧊</div><div class="class-name">Plastic Cup Lids</div><div class="class-f1">F1: 0.78</div><div class="class-tag tag-x">General</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🧼</div><div class="class-name">Plastic Detergent Bottles</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-r">Recyclable</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🥡</div><div class="class-name">Plastic Food Containers</div><div class="class-f1">F1: 0.83</div><div class="class-tag tag-r">Recyclable</div></div>
@@ -450,14 +341,10 @@
     <div class="class-card fade-in"><div class="class-emoji">🥤</div><div class="class-name">Plastic Straws</div><div class="class-f1">F1: 0.94</div><div class="class-tag tag-x">General</div></div>
     <div class="class-card fade-in"><div class="class-emoji">🗑️</div><div class="class-name">Plastic Trash Bags</div><div class="class-f1">F1: 0.86</div><div class="class-tag tag-x">General</div></div>
     <div class="class-card fade-in"><div class="class-emoji">💧</div><div class="class-name">Plastic Water Bottles</div><div class="class-f1">F1: 0.77</div><div class="class-tag tag-r">Recyclable</div></div>
-    <!-- Textile -->
     <div class="class-card fade-in"><div class="class-emoji">👟</div><div class="class-name">Shoes</div><div class="class-f1">F1: 0.94</div><div class="class-tag tag-t">Textile</div></div>
-    <!-- Metal -->
     <div class="class-card fade-in"><div class="class-emoji">🥫</div><div class="class-name">Steel Food Cans</div><div class="class-f1">F1: 0.54</div><div class="class-tag tag-r">Recyclable</div></div>
-    <!-- Styrofoam -->
     <div class="class-card fade-in"><div class="class-emoji">🧃</div><div class="class-name">Styrofoam Cups</div><div class="class-f1">F1: 0.88</div><div class="class-tag tag-x">General</div></div>
     <div class="class-card fade-in"><div class="class-emoji">📦</div><div class="class-name">Styrofoam Food Containers</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-x">General</div></div>
-    <!-- Organic -->
     <div class="class-card fade-in"><div class="class-emoji">🍵</div><div class="class-name">Tea Bags</div><div class="class-f1">F1: 0.86</div><div class="class-tag tag-o">Compostable</div></div>
   </div>
 </section>
@@ -540,7 +427,6 @@
   </div>
 </section>
 
-
 <footer>
   <div class="footer-logo">EcoSort<span style="color:var(--lime)">AI</span></div>
   <div class="footer-text">MobileNetV2 · 30 Classes · 82.40% Accuracy</div>
@@ -551,41 +437,48 @@
 // ── Cursor ───────────────────────────────────────────────────────────────────
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
+let mx=0, my=0, rx=0, ry=0;
 document.addEventListener('mousemove', e => {
-  mx=e.clientX; my=e.clientY;
-  cursor.style.transform=`translate(${mx-6}px,${my-6}px)`;
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate(${mx-6}px,${my-6}px)`;
 });
-(function animRing(){ rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
-  ring.style.transform=`translate(${rx-18}px,${ry-18}px)`;
+(function animRing(){
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  ring.style.transform = `translate(${rx-18}px,${ry-18}px)`;
   requestAnimationFrame(animRing);
 })();
 
 // ── Fade-in observer ─────────────────────────────────────────────────────────
-const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:.1});
+const obs = new IntersectionObserver(
+  es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: .1 }
+);
 document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 
-// ── Smooth scroll ────────────────────────────────────────────────────────────
-document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
-  e.preventDefault(); document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
-}));
+// ── Smooth scroll ─────────────────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a =>
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior:'smooth' });
+  })
+);
 
-// ── Classifier logic ─────────────────────────────────────────────────────────
-const zone       = document.getElementById('uploadZone');
-const fileInput  = document.getElementById('fileInput');
-const previewImg = document.getElementById('previewImg');
-const uploadIcon = document.getElementById('uploadIcon');
-const uploadText = document.getElementById('uploadText');
-const loadingArea= document.getElementById('loadingArea');
-const resultArea = document.getElementById('resultArea');
-const resultTag  = document.getElementById('resultTag');
-const resultLabel= document.getElementById('resultLabel');
-const resultConf = document.getElementById('resultConf');
-const resultTip  = document.getElementById('resultTip');
-const resultBars = document.getElementById('resultBars');
-const btnClassify= document.getElementById('btnClassify');
-const btnReset   = document.getElementById('btnReset');
-const errorMsg   = document.getElementById('errorMsg');
+// ── Classifier logic ──────────────────────────────────────────────────────────
+const zone        = document.getElementById('uploadZone');
+const fileInput   = document.getElementById('fileInput');
+const previewImg  = document.getElementById('previewImg');
+const uploadIcon  = document.getElementById('uploadIcon');
+const uploadText  = document.getElementById('uploadText');
+const loadingArea = document.getElementById('loadingArea');
+const resultArea  = document.getElementById('resultArea');
+const resultTag   = document.getElementById('resultTag');
+const resultLabel = document.getElementById('resultLabel');
+const resultConf  = document.getElementById('resultConf');
+const resultTip   = document.getElementById('resultTip');
+const resultBars  = document.getElementById('resultBars');
+const btnClassify = document.getElementById('btnClassify');
+const btnReset    = document.getElementById('btnReset');
+const errorMsg    = document.getElementById('errorMsg');
 
 let selectedFile = null;
 
@@ -595,17 +488,17 @@ zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
 zone.addEventListener('drop', e => {
   e.preventDefault(); zone.classList.remove('dragging');
   const f = e.dataTransfer.files[0];
-  if(f && f.type.startsWith('image/')) setFile(f);
+  if (f && f.type.startsWith('image/')) setFile(f);
 });
-fileInput.addEventListener('change', () => { if(fileInput.files[0]) setFile(fileInput.files[0]); });
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
 
 function setFile(file) {
   selectedFile = file;
   const url = URL.createObjectURL(file);
   previewImg.src = url;
-  previewImg.style.display = 'block';
-  uploadIcon.style.display = 'none';
-  uploadText.style.display = 'none';
+  previewImg.style.display  = 'block';
+  uploadIcon.style.display  = 'none';
+  uploadText.style.display  = 'none';
   btnClassify.style.display = 'block';
   btnReset.style.display    = 'block';
   resultArea.style.display  = 'none';
@@ -615,7 +508,7 @@ function setFile(file) {
 btnClassify.addEventListener('click', classify);
 
 async function classify() {
-  if(!selectedFile) return;
+  if (!selectedFile) return;
   btnClassify.style.display = 'none';
   loadingArea.style.display = 'flex';
   resultArea.style.display  = 'none';
@@ -629,18 +522,14 @@ async function classify() {
     const data = await res.json();
     loadingArea.style.display = 'none';
 
-    if(!data.success) throw new Error(data.error || 'Prediction failed');
+    if (!data.success) throw new Error(data.error || 'Prediction failed');
 
-    // Result tag
     resultTag.style.borderColor = data.best.color + '55';
     resultTag.style.background  = data.best.color + '18';
     resultLabel.textContent = `${data.best.disposal} — ${data.best.label}`;
     resultConf.textContent  = `${data.best.confidence}% confident`;
+    resultTip.textContent   = data.best.tip;
 
-    // Tip
-    resultTip.textContent = data.best.tip;
-
-    // Top-5 bars
     resultBars.innerHTML = '';
     data.top5.forEach((item, i) => {
       const colors = ['var(--green)','var(--lime)','var(--amber)','var(--blue)','var(--muted)'];
@@ -661,7 +550,7 @@ async function classify() {
   } catch(err) {
     loadingArea.style.display = 'none';
     errorMsg.textContent = '⚠ ' + (err.message || 'Could not connect to Flask server. Make sure app.py is running.');
-    errorMsg.style.display = 'block';
+    errorMsg.style.display    = 'block';
     btnClassify.style.display = 'block';
   }
 }
@@ -677,65 +566,6 @@ btnReset.addEventListener('click', () => {
   resultArea.style.display  = 'none';
   errorMsg.style.display    = 'none';
 });
-</script>
-  <script>
-
-const uploadZone = document.querySelector('.upload-zone');
-
-const fileInput = document.createElement('input');
-
-fileInput.type = 'file';
-
-fileInput.accept = 'image/*';
-
-fileInput.style.display = 'none';
-
-document.body.appendChild(fileInput);
-
-uploadZone.addEventListener('click', () => {
-    fileInput.click();
-});
-
-fileInput.addEventListener('change', async () => {
-
-    const file = fileInput.files[0];
-
-    if (!file) return;
-
-    const formData = new FormData();
-
-    formData.append("file", file);
-
-    try {
-
-        const response = await fetch('/predict', {
-
-            method: 'POST',
-
-            body: formData
-
-        });
-
-        const data = await response.json();
-
-        console.log(data);
-
-        alert(
-            "Prediction: " +
-            data.best.label
-        );
-
-    }
-
-    catch(err) {
-
-        console.error(err);
-
-        alert("Prediction failed");
-    }
-
-});
-
 </script>
 </body>
 </html>
