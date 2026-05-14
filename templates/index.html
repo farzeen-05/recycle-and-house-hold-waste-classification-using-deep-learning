@@ -497,5 +497,64 @@ btnReset.addEventListener('click', () => {
   errorMsg.style.display    = 'none';
 });
 </script>
+  <script>
+
+const uploadZone = document.querySelector('.upload-zone');
+
+const fileInput = document.createElement('input');
+
+fileInput.type = 'file';
+
+fileInput.accept = 'image/*';
+
+fileInput.style.display = 'none';
+
+document.body.appendChild(fileInput);
+
+uploadZone.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', async () => {
+
+    const file = fileInput.files[0];
+
+    if (!file) return;
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    try {
+
+        const response = await fetch('/predict', {
+
+            method: 'POST',
+
+            body: formData
+
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        alert(
+            "Prediction: " +
+            data.best.label
+        );
+
+    }
+
+    catch(err) {
+
+        console.error(err);
+
+        alert("Prediction failed");
+    }
+
+});
+
+</script>
 </body>
 </html>
