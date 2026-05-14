@@ -497,46 +497,71 @@ async function classify() {
   const fd = new FormData();
   fd.append('file', selectedFile);
 
+  let res, rawText, data;
   try {
-    const res  = await fetch('/predict', { method:'POST', body: fd });
-    const data = await res.json();
+    res = await fetch('/predict', { method: 'POST', body: fd });
+  } catch(networkErr) {
     loadingArea.style.display = 'none';
-
-    if(!data.success) throw new Error(data.error || 'Prediction failed');
-
-    // Result tag
-    resultTag.style.borderColor = data.best.color + '55';
-    resultTag.style.background  = data.best.color + '18';
-    resultLabel.textContent = `${data.best.disposal} — ${data.best.label}`;
-    resultConf.textContent  = `${data.best.confidence}% confident`;
-
-    // Tip
-    resultTip.textContent = data.best.tip;
-
-    // Top-5 bars
-    resultBars.innerHTML = '';
-    data.top5.forEach((item, i) => {
-      const colors = ['var(--green)','var(--lime)','var(--amber)','var(--blue)','var(--muted)'];
-      resultBars.innerHTML += `
-        <div class="result-bar">
-          <div class="bar-header">
-            <span class="bar-label">${item.label}</span>
-            <span class="bar-pct">${item.confidence.toFixed(1)}%</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:${item.confidence}%;background:${colors[i]}"></div>
-          </div>
-        </div>`;
-    });
-
-    resultArea.style.display = 'block';
-
-  } catch(err) {
-    loadingArea.style.display = 'none';
-    errorMsg.textContent = '⚠ ' + (err.message || 'Could not connect to Flask server. Make sure app.py is running.');
-    errorMsg.style.display = 'block';
-    btnClassify.style.display = 'block';
+    showError('Network error — could not reach server: ' + networkErr.message);
+    return;
   }
+
+  // Read raw text first so we can show it if JSON parse fails
+  try {
+    rawText = await res.text();
+  } catch(readErr) {
+    loadingArea.style.display = 'none';
+    showError('Could not read server response: ' + readErr.message);
+    return;
+  }
+
+  // Parse JSON safely
+  try {
+    data = JSON.parse(rawText);
+  } catch(parseErr) {
+    loadingArea.style.display = 'none';
+    // Show first 300 chars of raw response to help debug
+    const preview = rawText ? rawText.substring(0, 300) : '(empty response)';
+    showError(`Server returned invalid JSON (HTTP ${res.status}).<br><small style="opacity:.6;word-break:break-all">${preview}</small>`);
+    return;
+  }
+
+  loadingArea.style.display = 'none';
+
+  if(!res.ok || !data.success) {
+    showError('Server error: ' + (data.error || data.traceback || `HTTP ${res.status}`));
+    return;
+  }
+
+  // ── Render results ────────────────────────────────────────────
+  resultTag.style.borderColor = (data.best.color || '#4ade80') + '55';
+  resultTag.style.background  = (data.best.color || '#4ade80') + '18';
+  resultLabel.textContent = `${data.best.disposal} — ${data.best.label}`;
+  resultConf.textContent  = `${data.best.confidence}% confident`;
+  resultTip.textContent   = data.best.tip;
+
+  resultBars.innerHTML = '';
+  (data.top5 || []).forEach((item, i) => {
+    const colors = ['var(--green)','var(--lime)','var(--amber)','var(--blue)','var(--muted)'];
+    resultBars.innerHTML += `
+      <div class="result-bar">
+        <div class="bar-header">
+          <span class="bar-label">${item.label}</span>
+          <span class="bar-pct">${item.confidence.toFixed(1)}%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${item.confidence}%;background:${colors[i]}"></div>
+        </div>
+      </div>`;
+  });
+
+  resultArea.style.display = 'block';
+}
+
+function showError(msg) {
+  errorMsg.innerHTML = '⚠ ' + msg;
+  errorMsg.style.display = 'block';
+  btnClassify.style.display = 'block';
 }
 
 btnReset.addEventListener('click', () => {
