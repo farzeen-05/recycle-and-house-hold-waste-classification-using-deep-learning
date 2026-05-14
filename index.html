@@ -359,60 +359,7 @@
   </div>
 </section>
 
-<!-- SETUP / HOW TO USE -->
-<section id="usage">
-  <div class="section-label">Setup Guide</div>
-  <h2 class="section-title">Run Locally in<br>4 Steps</h2>
-  <div class="usage-grid">
-    <div class="usage-steps">
-      <div class="usage-step fade-in">
-        <div class="step-indicator">1</div>
-        <div>
-          <div class="usage-step-title">Place your files</div>
-          <div class="usage-step-desc">Put <code style="color:var(--green)">waste_classification_model.h5</code> and <code style="color:var(--green)">class_names.json</code> (downloaded from Colab) in the project root.</div>
-        </div>
-      </div>
-      <div class="usage-step fade-in">
-        <div class="step-indicator">2</div>
-        <div>
-          <div class="usage-step-title">Install dependencies</div>
-          <div class="usage-step-desc"><code style="color:var(--green)">pip install flask flask-cors tensorflow pillow numpy</code></div>
-        </div>
-      </div>
-      <div class="usage-step fade-in">
-        <div class="step-indicator">3</div>
-        <div>
-          <div class="usage-step-title">Run Flask server</div>
-          <div class="usage-step-desc"><code style="color:var(--green)">python app.py</code> — server starts at <code style="color:var(--lime)">http://localhost:5000</code></div>
-        </div>
-      </div>
-      <div class="usage-step fade-in">
-        <div class="step-indicator">4</div>
-        <div>
-          <div class="usage-step-title">Open in browser</div>
-          <div class="usage-step-desc">Visit <code style="color:var(--lime)">http://localhost:5000</code> and upload a waste image to classify it live!</div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <p style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px">Project structure</p>
-      <div class="file-structure">
-<span class="fs-dir">project/</span>
-├── <span class="fs-file">app.py</span>               <span class="fs-comment"># Flask backend</span>
-├── <span class="fs-file">waste_classification_model.h5</span>  <span class="fs-comment"># your model</span>
-├── <span class="fs-file">class_names.json</span>     <span class="fs-comment"># 30 class labels</span>
-├── <span class="fs-dir">templates/</span>
-│   └── <span class="fs-file">index.html</span>       <span class="fs-comment"># this page</span>
-└── <span class="fs-dir">static/</span>             <span class="fs-comment"># optional assets</span>
 
-<span class="fs-comment"># API Endpoints</span>
-POST  <span class="fs-dir">/predict</span>    → classify image
-GET   <span class="fs-dir">/classes</span>    → list all 30 classes
-GET   <span class="fs-dir">/health</span>     → server status
-      </div>
-    </div>
-  </div>
-</section>
 
 <footer>
   <div class="footer-logo">EcoSort<span style="color:var(--lime)">AI</span></div>
