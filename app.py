@@ -16,7 +16,7 @@ Every route always returns valid JSON — never an empty response.
 
 import os, json, io, base64, h5py, traceback
 import numpy as np
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 from PIL import Image
 
