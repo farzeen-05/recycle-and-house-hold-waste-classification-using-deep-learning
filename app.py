@@ -9,10 +9,6 @@ Acc    : 82.40% validation
 EcoSort AI — Flask Backend
 MobileNetV2 | 30 classes | 128x128 | 82.40%
 
-KEY FIX: Model is loaded lazily (on first request), NOT at import time.
-This prevents gunicorn from crashing during startup if model loading fails.
-Every route always returns valid JSON — never an empty response.
-"""
 
 import os, json, io, base64, h5py, traceback
 import numpy as np
