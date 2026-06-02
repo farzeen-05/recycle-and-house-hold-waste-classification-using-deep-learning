@@ -8,7 +8,7 @@ Acc    : 82.40% validation
 """
 EcoSort AI — Flask Backend
 MobileNetV2 | 30 classes | 128x128 | 82.40%
-
+"""
 
 import os, json, io, base64, h5py, traceback
 import numpy as np
