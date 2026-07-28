@@ -10,17 +10,17 @@
 ![Render](https://img.shields.io/badge/Deployed%20on-Render-46E3B7?logo=render)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-> AI-powered web application that automatically classifies recyclable and household waste into **30 categories** using **MobileNetV2** and provides disposal guidance with confidence scores through a modern Flask web application.
+> **EcoSort AI** is an AI-powered web application that classifies recyclable and household waste into **30 categories** using **MobileNetV2 Transfer Learning**. It provides real-time predictions, confidence scores, and disposal guidance through an intuitive Flask-based web interface.
 
 ---
 
-# 🔗 Live Demo
+## 🌐 Live Demo
 
-**Website:** https://recycle-and-house-hold-waste-b4o1.onrender.com/
+**🔗 Website:** https://recycle-and-house-hold-waste-b4o1.onrender.com/
 
 ---
 
-# 📋 Table of Contents
+## 📋 Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -29,40 +29,42 @@
 - [Tech Stack](#tech-stack)
 - [Model Architecture](#model-architecture)
 - [Project Workflow](#project-workflow)
-- [Folder Structure](#folder-structure)
+- [Project Structure](#project-structure)
 - [Deployment](#deployment)
-- [Challenges & Solutions](#challenges--solutions)
 - [Results](#results)
+- [Challenges & Solutions](#challenges--solutions)
 - [Future Enhancements](#future-enhancements)
 - [Installation](#installation)
 - [Author](#author)
 - [License](#license)
 
-## 📖 Overview
+---
 
-EcoSort AI is a Deep Learning based waste classification system developed to automatically identify recyclable and household waste from images. The application assists users in proper waste segregation by predicting the waste category and providing disposal recommendations.
+## Overview
 
-The project uses **Transfer Learning** with **MobileNetV2**, enabling accurate image classification while maintaining low computational requirements suitable for web deployment.
+EcoSort AI is a Deep Learning-based waste classification system designed to identify recyclable and household waste from uploaded images. The application promotes proper waste segregation by predicting the waste category and providing suitable disposal recommendations.
+
+The model is built using **MobileNetV2 Transfer Learning**, offering high accuracy with a lightweight architecture suitable for real-time web deployment.
 
 ---
 
-## ✨ Features
+## Features
 
-- Classifies 30 waste categories
-- MobileNetV2 Transfer Learning model
-- Real-time image prediction
-- Top-5 prediction probabilities
-- Confidence score display
-- Disposal guidance
-- Responsive web interface
-- Drag & Drop image upload
-- Mobile-friendly design
-- Flask REST API
-- Render deployment
+- ♻️ Classifies 30 waste categories
+- 🤖 MobileNetV2 Transfer Learning model
+- 📷 Real-time image classification
+- 📈 Displays Top-5 predictions
+- 🎯 Confidence score for every prediction
+- 🗑️ Waste disposal recommendations
+- 🌐 Responsive web interface
+- 📱 Mobile-friendly design
+- 📤 Drag & Drop image upload
+- ⚡ Flask REST API
+- ☁️ Deployed on Render
 
 ---
 
-## 🏗 System Architecture
+## Architecture
 
 ```
 User Uploads Image
@@ -81,7 +83,7 @@ User Uploads Image
  Softmax Classification
         │
         ▼
- Prediction + Confidence
+ Top-5 Predictions
         │
         ▼
  Disposal Recommendation
@@ -89,16 +91,16 @@ User Uploads Image
 
 ---
 
-## 📂 Dataset
+## Dataset
 
-Dataset Size
+### Dataset Details
 
-- Approximately 15,000 Images
-- 30 Waste Categories
-- Default Images
-- Real-world Images
+- Approximately **15,000 images**
+- **30 waste categories**
+- Default images
+- Real-world images
 
-Example Classes
+### Sample Classes
 
 - Plastic Water Bottles
 - Plastic Bags
@@ -108,7 +110,7 @@ Example Classes
 - Coffee Grounds
 - Tea Bags
 - Glass Bottles
-- Aluminum Cans
+- Aluminium Cans
 - Shoes
 - Clothing
 - Styrofoam Containers
@@ -117,151 +119,170 @@ Example Classes
 
 ---
 
-## 🤖 Model Architecture
-
-Model Used
-
-**MobileNetV2 (Transfer Learning)**
-
-Additional Layers
-
-- GlobalAveragePooling2D
-- Dense(128, ReLU)
-- Dropout
-- Dense(30, Softmax)
-
-Training Configuration
-
-- Optimizer : Adam
-- Loss Function : Categorical Crossentropy
-- Epochs : 3
-- Batch Size : 16
-- Input Size : 128 × 128
-
----
-
-## ⚙️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |--------|------------|
-| Language | Python |
+| Programming Language | Python |
 | Deep Learning | TensorFlow / Keras |
-| Model | MobileNetV2 |
+| CNN Model | MobileNetV2 |
 | Backend | Flask |
 | Frontend | HTML, CSS, JavaScript |
 | Image Processing | Pillow, NumPy |
-| Training | Google Colab |
+| Training Platform | Google Colab |
 | Deployment | Render |
 | Version Control | GitHub |
 
 ---
 
-## 🔄 Project Workflow
+## Model Architecture
 
-1. Upload waste image
-2. Flask receives image
-3. Image preprocessing
-4. MobileNetV2 extracts features
-5. Softmax predicts class
-6. Top-5 predictions generated
-7. Disposal guidance displayed
+### Base Model
+
+- MobileNetV2 (Transfer Learning)
+
+### Classification Layers
+
+- GlobalAveragePooling2D
+- Dense (128, ReLU)
+- Dropout
+- Dense (30, Softmax)
+
+### Training Configuration
+
+| Parameter | Value |
+|-----------|-------|
+| Optimizer | Adam |
+| Loss Function | Categorical Crossentropy |
+| Epochs | 3 |
+| Batch Size | 16 |
+| Input Size | 128 × 128 |
 
 ---
 
-## 📁 Project Structure
+## Project Workflow
+
+1. User uploads an image.
+2. Flask receives the uploaded file.
+3. Image preprocessing (resize and normalization).
+4. MobileNetV2 extracts image features.
+5. Softmax layer predicts the waste category.
+6. Top-5 predictions with confidence scores are generated.
+7. Disposal guidance is displayed to the user.
+
+---
+
+## Project Structure
 
 ```
 EcoSort-AI/
-
-│── app.py
-│── requirements.txt
-│── class_names.json
-│── waste_classification_model.h5
-
-│── templates/
-│      index.html
-
-│── static/
-│      uploads/
-
-│── dataset/
-
-│── README.md
+│
+├── app.py
+├── requirements.txt
+├── waste_classification_model.h5
+├── class_names.json
+├── README.md
+│
+├── templates/
+│   └── index.html
+│
+├── static/
+│   ├── css/
+│   ├── js/
+│   ├── images/
+│   └── uploads/
+│
+└── dataset/
 ```
 
 ---
 
-# 🚀 Deployment
+## Deployment
 
-Deployment Pipeline
+### Deployment Pipeline
 
+```
 Google Colab
+      │
+      ▼
+   GitHub
+      │
+      ▼
+    Render
+      │
+      ▼
+ Live Web Application
+```
 
-↓
-
-GitHub
-
-↓
-
-Render
-
-↓
-
-Live Web Application
+**Live Demo:** https://recycle-and-house-hold-waste-b4o1.onrender.com/
 
 ---
 
-## 📊 Results
+## Results
 
 | Metric | Value |
 |--------|-------|
 | Model | MobileNetV2 |
-| Classes | 30 |
-| Dataset | ~15,000 Images |
+| Dataset Size | ~15,000 Images |
+| Number of Classes | 30 |
 | Validation Accuracy | 82.40% |
 | Framework | TensorFlow |
 | Deployment | Render |
 
 ---
 
-## ⚡ Challenges & Solutions
+## Challenges & Solutions
 
 | Challenge | Solution |
 |-----------|----------|
-| Large dataset | Image resizing and batching |
-| Long training time | Used T4 GPU in Google Colab |
-| Memory limitations | MobileNetV2 lightweight architecture |
-| Render timeout | Optimized TensorFlow and Gunicorn configuration |
-| Incorrect dataset path | Auto-detected dataset structure |
+| Large dataset | Image resizing and batch processing |
+| Long training time | Used Google Colab T4 GPU |
+| Memory limitations | Lightweight MobileNetV2 architecture |
+| Render timeout | Optimised TensorFlow and Gunicorn configuration |
+| Dataset path issues | Structured dataset with automatic loading |
 
 ---
 
-## 🌱 Future Enhancements
+## Future Enhancements
 
-- Camera-based live detection
-- Android application
-- IoT Smart Dustbin Integration
-- Multi-language support
-- Offline prediction
-- Higher accuracy models
-- Cloud database integration
+- 📹 Live camera-based waste detection
+- 📱 Android mobile application
+- 🤖 IoT Smart Dustbin integration
+- 🌍 Multi-language support
+- 💾 Offline prediction support
+- 📈 Higher accuracy using advanced CNN architectures
+- ☁️ Cloud database integration
+- 📊 Prediction history and analytics dashboard
 
 ---
 
-## 🛠 Installation
+## Installation
+
+### Clone the Repository
 
 ```bash
+git clone https://github.com/farzeen-05/recycle-and-house-hold-waste-classification-using-deep-learning.git
+```
 
-gh repo clone farzeen-05/recycle-and-house-hold-waste-classification-using-deep-learning
+### Navigate to the Project
 
+```bash
 cd recycle-and-house-hold-waste-classification-using-deep-learning
+```
 
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
+### Run the Application
+
+```bash
 python app.py
 ```
 
-Open
+Open your browser and visit:
 
 ```
 http://localhost:5000
@@ -272,14 +293,15 @@ http://localhost:5000
 ## Author
 
 **Farzeen Abdul Khadir**
-ECE Graduate | ML & Full-Stack Developer | MLOps & Cloud
+
+ECE Graduate | Machine Learning Engineer | Full-Stack Developer | MLOps & Cloud Enthusiast
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?logo=linkedin)](https://www.linkedin.com/in/farzeen-abdul-khadir-8921ba2a1)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github)](https://github.com/farzeen-05)
 
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github)](https://github.com/farzeen-05)
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
