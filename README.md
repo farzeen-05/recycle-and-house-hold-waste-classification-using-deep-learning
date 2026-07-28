@@ -38,7 +38,7 @@
 - [Author](#author)
 - [License](#license)
 
-# 📖 Overview
+## 📖 Overview
 
 EcoSort AI is a Deep Learning based waste classification system developed to automatically identify recyclable and household waste from images. The application assists users in proper waste segregation by predicting the waste category and providing disposal recommendations.
 
@@ -46,7 +46,7 @@ The project uses **Transfer Learning** with **MobileNetV2**, enabling accurate i
 
 ---
 
-# ✨ Features
+## ✨ Features
 
 - Classifies 30 waste categories
 - MobileNetV2 Transfer Learning model
@@ -62,7 +62,7 @@ The project uses **Transfer Learning** with **MobileNetV2**, enabling accurate i
 
 ---
 
-# 🏗 System Architecture
+## 🏗 System Architecture
 
 ```
 User Uploads Image
@@ -89,7 +89,7 @@ User Uploads Image
 
 ---
 
-# 📂 Dataset
+## 📂 Dataset
 
 Dataset Size
 
@@ -117,7 +117,7 @@ Example Classes
 
 ---
 
-# 🤖 Model Architecture
+## 🤖 Model Architecture
 
 Model Used
 
@@ -140,7 +140,7 @@ Training Configuration
 
 ---
 
-# ⚙️ Tech Stack
+## ⚙️ Tech Stack
 
 | Layer | Technology |
 |--------|------------|
@@ -156,7 +156,7 @@ Training Configuration
 
 ---
 
-# 🔄 Project Workflow
+## 🔄 Project Workflow
 
 1. Upload waste image
 2. Flask receives image
@@ -168,7 +168,7 @@ Training Configuration
 
 ---
 
-# 📁 Project Structure
+## 📁 Project Structure
 
 ```
 EcoSort-AI/
@@ -211,7 +211,7 @@ Live Web Application
 
 ---
 
-# 📊 Results
+## 📊 Results
 
 | Metric | Value |
 |--------|-------|
@@ -224,7 +224,7 @@ Live Web Application
 
 ---
 
-# ⚡ Challenges & Solutions
+## ⚡ Challenges & Solutions
 
 | Challenge | Solution |
 |-----------|----------|
@@ -236,7 +236,7 @@ Live Web Application
 
 ---
 
-# 🌱 Future Enhancements
+## 🌱 Future Enhancements
 
 - Camera-based live detection
 - Android application
@@ -248,7 +248,7 @@ Live Web Application
 
 ---
 
-# 🛠 Installation
+## 🛠 Installation
 
 ```bash
 
@@ -280,6 +280,6 @@ ECE Graduate | ML & Full-Stack Developer | MLOps & Cloud
 
 ---
 
-# 📄 License
+## 📄 License
 
 This project is licensed under the MIT License.
