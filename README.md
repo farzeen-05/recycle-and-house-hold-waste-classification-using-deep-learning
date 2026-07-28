@@ -22,21 +22,21 @@
 
 # 📋 Table of Contents
 
-- Overview
-- Features
-- Architecture
-- Dataset
-- Tech Stack
-- Model Architecture
-- Project Workflow
-- Folder Structure
-- Deployment
-- Challenges & Solutions
-- Results
-- Future Enhancements
-- Installation
-
----
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Dataset](#dataset)
+- [Tech Stack](#tech-stack)
+- [Model Architecture](#model-architecture)
+- [Project Workflow](#project-workflow)
+- [Folder Structure](#folder-structure)
+- [Deployment](#deployment)
+- [Challenges & Solutions](#challenges--solutions)
+- [Results](#results)
+- [Future Enhancements](#future-enhancements)
+- [Installation](#installation)
+- [Author](#author)
+- [License](#license)
 
 # 📖 Overview
 
