@@ -1,3 +1,7 @@
+"""
+EcoSort AI — Flask Backend with SQLite Auth
+MobileNetV2 | 30 classes | 128x128 | 82.40%
+"""
 
 import os, json, io, base64, h5py, traceback, sqlite3, datetime
 from functools import wraps
@@ -20,7 +24,9 @@ NUM_CLASSES = 30
 MAX_MB      = 10
 MODEL_PATH  = 'waste_classification_model.h5'
 LABELS_PATH = 'class_names.json'
-DB_PATH     = 'ecosort.db'
+# Use absolute path for DB so it works regardless of working directory
+BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
+DB_PATH     = os.path.join(BASE_DIR, 'ecosort.db')
 
 # ── Database ─────────────────────────────────────────────────────────────────
 def get_db():
@@ -37,6 +43,7 @@ def close_db(exception):
         db.close()
 
 def init_db():
+    """Create tables if they don't exist. Safe to call multiple times."""
     with app.app_context():
         db = get_db()
         db.executescript("""
@@ -62,7 +69,10 @@ def init_db():
             CREATE INDEX IF NOT EXISTS idx_predictions_user ON predictions(user_id);
         """)
         db.commit()
-        print('Database initialized', flush=True)
+        print('[DB] Initialized at: ' + DB_PATH, flush=True)
+
+# Initialize DB immediately on import (works with gunicorn + python app.py)
+init_db()
 
 # ── Auth helpers ─────────────────────────────────────────────────────────────
 def login_required(f):
@@ -397,5 +407,4 @@ def get_history():
     return jsonify({'success': True, 'history': [dict(r) for r in rows]})
 
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True, host='0.0.0.0', port=5000)
