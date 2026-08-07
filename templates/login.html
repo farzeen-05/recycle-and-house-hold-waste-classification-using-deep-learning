@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — EcoSort AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f0a; --surface: #111811; --card: #161e16; --border: #1f2d1f;
+    --green: #4ade80; --lime: #a3e635; --amber: #fbbf24; --red: #f87171;
+    --text: #e8f5e8; --muted: #6b8c6b; --dim: #3a5a3a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  /* Background grid pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,222,128,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,222,128,.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .auth-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 24px;
+  }
+
+  .auth-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 48px 40px;
+    position: relative;
+  }
+
+  .auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .auth-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--green);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    text-decoration: none;
+  }
+
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--lime);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .4; transform: scale(.6); }
+  }
+
+  .auth-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+
+  .auth-subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .form-label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    transition: color .2s;
+  }
+
+  .form-group:focus-within .form-label {
+    color: var(--green);
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 16px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: all .2s ease;
+  }
+
+  .form-input::placeholder {
+    color: var(--dim);
+  }
+
+  .form-input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(74,222,128,.08);
+  }
+
+  .form-input.error {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(248,113,113,.08);
+  }
+
+  .field-error {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    margin-top: 6px;
+    display: none;
+  }
+
+  .field-error.visible { display: block; }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--green);
+    color: var(--bg);
+    border: none;
+    padding: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary:hover {
+    background: var(--lime);
+  }
+
+  .btn-primary:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  .btn-primary .spinner {
+    display: none;
+    width: 16px; height: 16px;
+    border: 2px solid var(--bg);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto;
+  }
+
+  .btn-primary.loading .btn-text { display: none; }
+  .btn-primary.loading .spinner { display: block; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .general-error {
+    background: rgba(248,113,113,.08);
+    border: 1px solid rgba(248,113,113,.25);
+    color: var(--red);
+    padding: 12px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  .general-error.visible { display: block; }
+
+  .auth-footer {
+    text-align: center;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .auth-footer-text {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .auth-footer a {
+    color: var(--green);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color .2s;
+  }
+
+  .auth-footer a:hover {
+    color: var(--lime);
+  }
+
+  .auth-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .auth-meta span {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .auth-meta .divider {
+    width: 4px; height: 4px;
+    background: var(--dim);
+    border-radius: 50%;
+  }
+
+  /* Back link */
+  .back-link {
+    position: fixed;
+    top: 24px; left: 24px;
+    z-index: 10;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color .2s;
+  }
+
+  .back-link:hover { color: var(--green); }
+
+  .back-link svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  @media (max-width: 480px) {
+    .auth-card { padding: 36px 24px; }
+    .auth-title { font-size: 24px; }
+    .back-link { top: 16px; left: 16px; }
+  }
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<a href="/" class="back-link">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Back to EcoSort
+</a>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <a href="/" class="auth-logo">
+        <span class="logo-dot"></span>
+        EcoSort<span style="color:var(--lime)">AI</span>
+      </a>
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-subtitle">Sign in to classify waste and track your environmental impact.</p>
+    </div>
+
+    <div class="general-error" id="generalError"></div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="identifier">Username or Email</label>
+        <input type="text" id="identifier" class="form-input" placeholder="you@example.com" autocomplete="username">
+        <div class="field-error" id="identifierError"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="Enter your password" autocomplete="current-password">
+        <div class="field-error" id="passwordError"></div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="submitBtn">
+        <span class="btn-text">Sign In</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p class="auth-footer-text">Don't have an account? <a href="/register">Create one</a></p>
+    </div>
+  </div>
+
+  <div class="auth-meta">
+    <span>MobileNetV2</span>
+    <span class="divider"></span>
+    <span>30 Classes</span>
+    <span class="divider"></span>
+    <span>82.40%</span>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('loginForm');
+const submitBtn = document.getElementById('submitBtn');
+const generalError = document.getElementById('generalError');
+
+function showFieldError(fieldId, message) {
+  const input = document.getElementById(fieldId);
+  const error = document.getElementById(fieldId + 'Error');
+  input.classList.add('error');
+  error.textContent = message;
+  error.classList.add('visible');
+}
+
+function clearErrors() {
+  document.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
+  document.querySelectorAll('.field-error').forEach(e => { e.textContent = ''; e.classList.remove('visible'); });
+  generalError.textContent = '';
+  generalError.classList.remove('visible');
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErrors();
+
+  const identifier = document.getElementById('identifier').value.trim();
+  const password = document.getElementById('password').value;
+
+  let hasError = false;
+  if (!identifier) { showFieldError('identifier', 'Username or email is required'); hasError = true; }
+  if (!password) { showFieldError('password', 'Password is required'); hasError = true; }
+  if (hasError) return;
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add('loading');
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier, password })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      const next = new URLSearchParams(window.location.search).get('next') || '/';
+      window.location.href = next;
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+      if (data.errors) {
+        Object.entries(data.errors).forEach(([field, msg]) => {
+          if (field === 'general') {
+            generalError.textContent = msg;
+            generalError.classList.add('visible');
+          } else {
+            showFieldError(field, msg);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove('loading');
+    generalError.textContent = 'Network error. Please try again.';
+    generalError.classList.add('visible');
+  }
+});
+
+// Clear error on input
+['identifier', 'password'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    this.classList.remove('error');
+    document.getElementById(id + 'Error').classList.remove('visible');
+  });
+});
+</script>
+
+</body>
+</html>
