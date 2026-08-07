@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSort AI — Waste Classification</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0a0f0a; --surface: #111811; --card: #161e16; --border: #1f2d1f;
     --green: #4ade80; --lime: #a3e635; --amber: #fbbf24; --blue: #38bdf8;
-    --red: #f87171; --purple: #c084fc; --text: #e8f5e8; --muted: #6b8c6b;
+    --red: #f87171; --purple: #c084fc; --text: #e8f5e8; --muted: #6b8c6b; --dim: #3a5a3a;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:'Instrument Sans',sans-serif; overflow-x:hidden; cursor:none; }
@@ -22,13 +22,40 @@
   @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   @keyframes growBar{from{width:0}}
 
+  /* ─── NAV ──────────────────────────────────── */
   nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 60px;border-bottom:1px solid var(--border);background:rgba(10,15,10,.85);backdrop-filter:blur(20px); }
-  .nav-logo { font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--green);display:flex;align-items:center;gap:8px; }
+  .nav-logo { font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--green);display:flex;align-items:center;gap:8px;text-decoration:none; }
   .logo-dot { width:8px;height:8px;background:var(--lime);border-radius:50%;animation:pulse 2s infinite; }
-  .nav-links { display:flex;gap:40px;list-style:none; }
+  .nav-links { display:flex;gap:40px;list-style:none;align-items:center; }
   .nav-links a { font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s; }
   .nav-links a:hover { color:var(--green); }
   .nav-badge { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:var(--green);padding:6px 14px; }
+
+  /* Auth nav items */
+  .nav-auth { display:flex;align-items:center;gap:16px; }
+  .nav-user {
+    display:flex;align-items:center;gap:10px;
+    font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;
+    color:var(--muted);
+  }
+  .user-avatar {
+    width:28px;height:28px;border-radius:50%;
+    background:var(--green);color:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  }
+  .nav-btn {
+    font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;
+    text-transform:uppercase;text-decoration:none;padding:8px 16px;
+    border:1px solid var(--border);color:var(--muted);
+    background:transparent;cursor:pointer;transition:all .2s;
+  }
+  .nav-btn:hover { border-color:var(--green);color:var(--green); }
+  .nav-btn-primary {
+    background:var(--green);color:var(--bg);border-color:var(--green);
+    font-weight:700;
+  }
+  .nav-btn-primary:hover { background:var(--lime);border-color:var(--lime);color:var(--bg); }
 
   /* ─── HERO ─────────────────────────────────── */
   .hero { min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:120px 60px 80px;gap:60px;position:relative;overflow:hidden; }
@@ -51,6 +78,8 @@
   .ui-title { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted); }
   .ui-status { display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:9px;color:var(--green); }
   .ui-status-dot { width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite; }
+
+  /* Upload zone with auth gate */
   .upload-zone { border:2px dashed var(--border);min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden; }
   .upload-zone:hover { border-color:var(--green);background:rgba(74,222,128,.03); }
   .upload-zone.dragging { border-color:var(--lime);background:rgba(163,230,53,.05); }
@@ -58,6 +87,37 @@
   .upload-text { font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;text-align:center; }
   .upload-preview { width:100%;height:160px;object-fit:cover;display:none; }
   #fileInput { display:none; }
+
+  /* Auth gate overlay */
+  .auth-gate {
+    position:absolute;inset:0;
+    background:rgba(10,15,10,.92);
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    gap:16px;z-index:10;
+    opacity:0;pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .auth-gate.visible { opacity:1;pointer-events:auto; }
+  .auth-gate-title {
+    font-family:'Syne',sans-serif;font-size:16px;font-weight:700;
+    color:var(--text);
+  }
+  .auth-gate-desc {
+    font-size:12px;color:var(--muted);text-align:center;max-width:260px;line-height:1.6;
+  }
+  .auth-gate-btns { display:flex;gap:10px; }
+  .auth-gate-btn {
+    font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;
+    text-transform:uppercase;text-decoration:none;padding:10px 20px;
+    border:1px solid var(--border);color:var(--muted);
+    background:transparent;cursor:pointer;transition:all .2s;
+  }
+  .auth-gate-btn:hover { border-color:var(--green);color:var(--green); }
+  .auth-gate-btn.primary {
+    background:var(--green);color:var(--bg);border-color:var(--green);font-weight:700;
+  }
+  .auth-gate-btn.primary:hover { background:var(--lime);border-color:var(--lime);color:var(--bg); }
 
   /* ─── RESULT AREA ───────────────────────────── */
   .result-area { display:none; }
@@ -125,7 +185,7 @@
   .pipeline { display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:60px;border:1px solid var(--border); }
   .pipeline-step { padding:32px 20px;border-right:1px solid var(--border);position:relative; }
   .pipeline-step:last-child{border-right:none}
-  .pipeline-step::after { content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--green);z-index:1;background:var(--surface);padding:4px 2px; }
+  .pipeline-step::after { content:'92';position:absolute;right:-12px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--green);z-index:1;background:var(--surface);padding:4px 2px; }
   .pipeline-step:last-child::after{display:none}
   .step-num { font-family:'Syne',sans-serif;font-size:44px;font-weight:800;color:var(--border);line-height:1;margin-bottom:14px; }
   .step-title { font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:6px; }
@@ -152,95 +212,70 @@
   .fade-in.visible{opacity:1;transform:translateY(0)}
   .error-msg{display:none;padding:10px 14px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red);font-family:'Space Mono',monospace;font-size:10px;margin-top:10px;}
 
+  /* Toast notification */
+  .toast {
+    position:fixed;bottom:24px;right:24px;z-index:200;
+    background:var(--card);border:1px solid var(--border);
+    padding:14px 20px;display:flex;align-items:center;gap:12px;
+    transform:translateY(100px);opacity:0;
+    transition:all .4s ease;
+    font-family:'Space Mono',monospace;font-size:11px;
+  }
+  .toast.visible { transform:translateY(0);opacity:1; }
+  .toast-success { border-left:3px solid var(--green); }
+  .toast-error { border-left:3px solid var(--red); }
+
   /* ═══════════════════════════════════════════════
-     RESPONSIVE — TABLET (≤1024px)
+     RESPONSIVE
   ═══════════════════════════════════════════════ */
   @media (max-width:1024px){
     nav { padding:16px 24px; }
-
-    .hero {
-      grid-template-columns:1fr;
-      padding:120px 24px 60px;
-      gap:40px;
-    }
-
-    .classifier-ui {
-      width:100%;
-      max-width:500px;
-      margin:auto;
-    }
-
+    .hero { grid-template-columns:1fr;padding:120px 24px 60px;gap:40px; }
+    .classifier-ui { width:100%;max-width:500px;margin:auto; }
     .hero-stats { grid-template-columns:repeat(2,1fr); }
-
-    .model-grid,
-    .usage-grid { grid-template-columns:1fr; gap:40px; }
-
+    .model-grid, .usage-grid { grid-template-columns:1fr; gap:40px; }
     .pipeline { grid-template-columns:1fr; }
     .pipeline-step { border-right:none; border-bottom:1px solid var(--border); }
     .pipeline-step::after { display:none; }
-
     .classes-grid { grid-template-columns:repeat(2,1fr); }
   }
-
-  /* ═══════════════════════════════════════════════
-     RESPONSIVE — MOBILE (≤768px)
-  ═══════════════════════════════════════════════ */
   @media (max-width:768px){
     body { cursor:auto; }
     .cursor, .cursor-ring { display:none; }
-
-    nav {
-      flex-direction:column;
-      gap:12px;
-      padding:14px 18px;
-    }
+    nav { flex-direction:column;gap:12px;padding:14px 18px; }
     .nav-links { gap:14px; flex-wrap:wrap; justify-content:center; }
     .nav-links a { font-size:9px; }
     .nav-badge { font-size:9px; text-align:center; }
-
-    .hero {
-      grid-template-columns:1fr;
-      padding:160px 18px 50px;
-      gap:36px;
-    }
+    .nav-auth { flex-wrap:wrap; justify-content:center; }
+    .hero { grid-template-columns:1fr;padding:160px 18px 50px;gap:36px; }
     .hero-title { font-size:38px; line-height:1.05; }
     .hero-desc { font-size:14px; }
     .hero-stats { grid-template-columns:repeat(2,1fr); }
     .stat-item { padding:14px 10px; }
     .stat-number { font-size:20px; }
-
     .classifier-ui { width:100%; padding:18px; }
     .upload-zone { min-height:140px; }
-
     section { padding:70px 18px; }
     .section-title { font-size:30px; }
     .section-sub { font-size:14px; }
-
     .classes-grid { grid-template-columns:repeat(2,1fr); }
-
     .model-name { font-size:26px; }
     .model-metrics { grid-template-columns:1fr 1fr; }
     .metric-val { font-size:22px; }
     .class-report { font-size:8px; }
-
     .result-tag { flex-direction:column; align-items:flex-start; gap:8px; }
-
     footer { flex-direction:column; gap:12px; text-align:center; padding:40px 20px; }
   }
-
-  /* ═══════════════════════════════════════════════
-     RESPONSIVE — SMALL PHONES (≤480px)
-  ═══════════════════════════════════════════════ */
   @media (max-width:480px){
     .hero-title { font-size:32px; }
     .hero-badge { font-size:8px; letter-spacing:1px; }
     .hero-stats { grid-template-columns:1fr 1fr; }
-
     .upload-text { font-size:9px; }
     .classes-grid { grid-template-columns:1fr; }
     .model-metrics { grid-template-columns:1fr; }
   }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -248,7 +283,7 @@
 <div class="cursor-ring" id="cursorRing"></div>
 
 <nav>
-  <div class="nav-logo"><div class="logo-dot"></div>EcoSort<span style="color:var(--lime)">AI</span></div>
+  <a href="/" class="nav-logo"><div class="logo-dot"></div>EcoSort<span style="color:var(--lime)">AI</span></a>
   <ul class="nav-links">
     <li><a href="#classify">Classify</a></li>
     <li><a href="#classes">30 Classes</a></li>
@@ -256,7 +291,11 @@
     <li><a href="#pipeline">Pipeline</a></li>
     <li><a href="#usage">Setup</a></li>
   </ul>
-  <div class="nav-badge">MobileNetV2 · 82.40%</div>
+  <div class="nav-auth" id="navAuth">
+    <!-- Populated by JS -->
+    <a href="/login" class="nav-btn">Sign In</a>
+    <a href="/register" class="nav-btn nav-btn-primary">Get Started</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -283,8 +322,18 @@
 
       <div class="upload-zone" id="uploadZone">
         <img class="upload-preview" id="previewImg" alt="preview">
-        <span class="upload-icon" id="uploadIcon">📷</span>
+        <span class="upload-icon" id="uploadIcon">&#128247;</span>
         <span class="upload-text" id="uploadText">DROP IMAGE HERE<br>OR CLICK TO BROWSE</span>
+
+        <!-- Auth Gate Overlay -->
+        <div class="auth-gate" id="authGate">
+          <div class="auth-gate-title">Authentication Required</div>
+          <div class="auth-gate-desc">Sign in to classify waste images and track your environmental impact.</div>
+          <div class="auth-gate-btns">
+            <a href="/login" class="auth-gate-btn">Sign In</a>
+            <a href="/register" class="auth-gate-btn primary">Get Started</a>
+          </div>
+        </div>
       </div>
       <input type="file" id="fileInput" accept="image/*">
 
@@ -304,8 +353,8 @@
 
       <div class="error-msg" id="errorMsg"></div>
 
-      <button class="btn-classify" id="btnClassify">🔍 Classify Waste</button>
-      <button class="btn-reset" id="btnReset" style="display:none">↩ Try Another Image</button>
+      <button class="btn-classify" id="btnClassify">Classify Waste</button>
+      <button class="btn-reset" id="btnReset" style="display:none">Try Another Image</button>
     </div>
   </div>
 </div>
@@ -316,36 +365,36 @@
   <h2 class="section-title">30 Waste Classes<br>Your Model Knows</h2>
   <p class="section-sub">Trained on 15,000 images across 30 detailed waste categories. Each class has ~500 training images covering default and real-world conditions.</p>
   <div class="classes-grid">
-    <div class="class-card fade-in"><div class="class-emoji">🛢️</div><div class="class-name">Aerosol Cans</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🥫</div><div class="class-name">Aluminum Food Cans</div><div class="class-f1">F1: 0.54</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🥤</div><div class="class-name">Aluminum Soda Cans</div><div class="class-f1">F1: 0.79</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">📦</div><div class="class-name">Cardboard Boxes</div><div class="class-f1">F1: 0.63</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🗃️</div><div class="class-name">Cardboard Packaging</div><div class="class-f1">F1: 0.58</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">👕</div><div class="class-name">Clothing</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-t">Textile</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">☕</div><div class="class-name">Coffee Grounds</div><div class="class-f1">F1: 0.95</div><div class="class-tag tag-o">Compostable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🍴</div><div class="class-name">Disposable Plastic Cutlery</div><div class="class-f1">F1: 0.91</div><div class="class-tag tag-x">General</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🥚</div><div class="class-name">Eggshells</div><div class="class-f1">F1: 0.93</div><div class="class-tag tag-o">Compostable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🍌</div><div class="class-name">Food Waste</div><div class="class-f1">F1: 0.95</div><div class="class-tag tag-o">Compostable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🍾</div><div class="class-name">Glass Beverage Bottles</div><div class="class-f1">F1: 0.80</div><div class="class-tag tag-g">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🧴</div><div class="class-name">Glass Cosmetic Containers</div><div class="class-f1">F1: 0.85</div><div class="class-tag tag-g">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🫙</div><div class="class-name">Glass Food Jars</div><div class="class-f1">F1: 0.88</div><div class="class-tag tag-g">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">📰</div><div class="class-name">Magazines</div><div class="class-f1">F1: 0.92</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">📄</div><div class="class-name">Newspaper</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">📋</div><div class="class-name">Office Paper</div><div class="class-f1">F1: 0.76</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">☕</div><div class="class-name">Paper Cups</div><div class="class-f1">F1: 0.78</div><div class="class-tag tag-x">General</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🧊</div><div class="class-name">Plastic Cup Lids</div><div class="class-f1">F1: 0.78</div><div class="class-tag tag-x">General</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🧼</div><div class="class-name">Plastic Detergent Bottles</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🥡</div><div class="class-name">Plastic Food Containers</div><div class="class-f1">F1: 0.83</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🛍️</div><div class="class-name">Plastic Shopping Bags</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-r">Soft Plastic</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🥤</div><div class="class-name">Plastic Soda Bottles</div><div class="class-f1">F1: 0.72</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🥤</div><div class="class-name">Plastic Straws</div><div class="class-f1">F1: 0.94</div><div class="class-tag tag-x">General</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🗑️</div><div class="class-name">Plastic Trash Bags</div><div class="class-f1">F1: 0.86</div><div class="class-tag tag-x">General</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">💧</div><div class="class-name">Plastic Water Bottles</div><div class="class-f1">F1: 0.77</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">👟</div><div class="class-name">Shoes</div><div class="class-f1">F1: 0.94</div><div class="class-tag tag-t">Textile</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🥫</div><div class="class-name">Steel Food Cans</div><div class="class-f1">F1: 0.54</div><div class="class-tag tag-r">Recyclable</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🧃</div><div class="class-name">Styrofoam Cups</div><div class="class-f1">F1: 0.88</div><div class="class-tag tag-x">General</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">📦</div><div class="class-name">Styrofoam Food Containers</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-x">General</div></div>
-    <div class="class-card fade-in"><div class="class-emoji">🍵</div><div class="class-name">Tea Bags</div><div class="class-f1">F1: 0.86</div><div class="class-tag tag-o">Compostable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F6E2;</div><div class="class-name">Aerosol Cans</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F96B;</div><div class="class-name">Aluminum Food Cans</div><div class="class-f1">F1: 0.54</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F964;</div><div class="class-name">Aluminum Soda Cans</div><div class="class-f1">F1: 0.79</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F4E6;</div><div class="class-name">Cardboard Boxes</div><div class="class-f1">F1: 0.63</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F5C3;</div><div class="class-name">Cardboard Packaging</div><div class="class-f1">F1: 0.58</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F455;</div><div class="class-name">Clothing</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-t">Textile</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x2615;</div><div class="class-name">Coffee Grounds</div><div class="class-f1">F1: 0.95</div><div class="class-tag tag-o">Compostable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F374;</div><div class="class-name">Disposable Plastic Cutlery</div><div class="class-f1">F1: 0.91</div><div class="class-tag tag-x">General</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F95A;</div><div class="class-name">Eggshells</div><div class="class-f1">F1: 0.93</div><div class="class-tag tag-o">Compostable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F34C;</div><div class="class-name">Food Waste</div><div class="class-f1">F1: 0.95</div><div class="class-tag tag-o">Compostable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F37E;</div><div class="class-name">Glass Beverage Bottles</div><div class="class-f1">F1: 0.80</div><div class="class-tag tag-g">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F9F4;</div><div class="class-name">Glass Cosmetic Containers</div><div class="class-f1">F1: 0.85</div><div class="class-tag tag-g">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1FAD9;</div><div class="class-name">Glass Food Jars</div><div class="class-f1">F1: 0.88</div><div class="class-tag tag-g">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F4F0;</div><div class="class-name">Magazines</div><div class="class-f1">F1: 0.92</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F4C4;</div><div class="class-name">Newspaper</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F4CB;</div><div class="class-name">Office Paper</div><div class="class-f1">F1: 0.76</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x2615;</div><div class="class-name">Paper Cups</div><div class="class-f1">F1: 0.78</div><div class="class-tag tag-x">General</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F9CA;</div><div class="class-name">Plastic Cup Lids</div><div class="class-f1">F1: 0.78</div><div class="class-tag tag-x">General</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F9FC;</div><div class="class-name">Plastic Detergent Bottles</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F961;</div><div class="class-name">Plastic Food Containers</div><div class="class-f1">F1: 0.83</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F6CD;</div><div class="class-name">Plastic Shopping Bags</div><div class="class-f1">F1: 0.87</div><div class="class-tag tag-r">Soft Plastic</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F964;</div><div class="class-name">Plastic Soda Bottles</div><div class="class-f1">F1: 0.72</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F964;</div><div class="class-name">Plastic Straws</div><div class="class-f1">F1: 0.94</div><div class="class-tag tag-x">General</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F5D1;</div><div class="class-name">Plastic Trash Bags</div><div class="class-f1">F1: 0.86</div><div class="class-tag tag-x">General</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F4A7;</div><div class="class-name">Plastic Water Bottles</div><div class="class-f1">F1: 0.77</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F45F;</div><div class="class-name">Shoes</div><div class="class-f1">F1: 0.94</div><div class="class-tag tag-t">Textile</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F96B;</div><div class="class-name">Steel Food Cans</div><div class="class-f1">F1: 0.54</div><div class="class-tag tag-r">Recyclable</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F9C3;</div><div class="class-name">Styrofoam Cups</div><div class="class-f1">F1: 0.88</div><div class="class-tag tag-x">General</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F4E6;</div><div class="class-name">Styrofoam Food Containers</div><div class="class-f1">F1: 0.90</div><div class="class-tag tag-x">General</div></div>
+    <div class="class-card fade-in"><div class="class-emoji">&#x1F375;</div><div class="class-name">Tea Bags</div><div class="class-f1">F1: 0.86</div><div class="class-tag tag-o">Compostable</div></div>
   </div>
 </section>
 
@@ -357,7 +406,7 @@
     <div>
       <div class="model-card fade-in">
         <div class="model-name">MobileNetV2</div>
-        <div class="model-sub">Transfer Learning · ImageNet weights · 128×128 input</div>
+        <div class="model-sub">Transfer Learning &middot; ImageNet weights &middot; 128&times;128 input</div>
         <p style="font-size:14px;line-height:1.7;color:var(--muted)">Trained on 12,000 images (80%) with validation on 3,000 (20%) across 30 waste categories. Base model frozen, custom classification head with Dense(128) + Softmax(30). Trained for 3 epochs on T4 GPU.</p>
         <div class="model-metrics">
           <div class="metric-cell"><div class="metric-val">82.40%</div><div class="metric-label">Val Accuracy</div></div>
@@ -380,8 +429,8 @@
 <span class="cr-good">               food_waste  0.97   0.93  0.95</span>
 <span class="cr-good">          plastic_straws   0.92   0.96  0.94</span>
 <span class="cr-mid">           steel_food_cans  0.65  0.46  0.54</span>
-<span class="cr-good">              styrofoam_…  0.95   0.82  0.88</span>
-<span style="color:var(--muted)">─────────────────────────────────────────</span>
+<span class="cr-good">              styrofoam_&hellip;  0.95   0.82  0.88</span>
+<span style="color:var(--muted)">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>
 <span style="color:var(--text)">                 accuracy                 <span class="cr-good">0.82</span>  3000</span>
 <span style="color:var(--text)">              macro avg    <span class="cr-good">0.83</span>  <span class="cr-good">0.82</span>  <span class="cr-good">0.82</span>  3000</span>
       </div>
@@ -398,43 +447,167 @@
       <div class="step-num">01</div>
       <div class="step-title">Dataset</div>
       <div class="step-desc">15,000 images, 30 classes from Google Drive. Each class has default + real_world subfolders.</div>
-      <div class="step-tech">Google Drive · 30 classes</div>
+      <div class="step-tech">Google Drive &middot; 30 classes</div>
     </div>
     <div class="pipeline-step fade-in">
       <div class="step-num">02</div>
       <div class="step-title">Preprocessing</div>
-      <div class="step-desc">Resize to 128×128, rescale to [0,1]. 80/20 train-val split via ImageDataGenerator.</div>
+      <div class="step-desc">Resize to 128&times;128, rescale to [0,1]. 80/20 train-val split via ImageDataGenerator.</div>
       <div class="step-tech">ImageDataGenerator</div>
     </div>
     <div class="pipeline-step fade-in">
       <div class="step-num">03</div>
       <div class="step-title">Model</div>
-      <div class="step-desc">MobileNetV2 (ImageNet) frozen base. Custom head: GAP → Dense(128,relu) → Softmax(30).</div>
-      <div class="step-tech">TF · Keras · T4 GPU</div>
+      <div class="step-desc">MobileNetV2 (ImageNet) frozen base. Custom head: GAP &rarr; Dense(128,relu) &rarr; Softmax(30).</div>
+      <div class="step-tech">TF &middot; Keras &middot; T4 GPU</div>
     </div>
     <div class="pipeline-step fade-in">
       <div class="step-num">04</div>
       <div class="step-title">Training</div>
       <div class="step-desc">Adam optimizer, categorical crossentropy loss. 3 epochs, batch 16. Val acc: 82.40%.</div>
-      <div class="step-tech">3 epochs · batch 16</div>
+      <div class="step-tech">3 epochs &middot; batch 16</div>
     </div>
     <div class="pipeline-step fade-in">
       <div class="step-num">05</div>
       <div class="step-title">Deploy</div>
       <div class="step-desc">Saved as .h5. Flask API serves predictions. This page calls /predict endpoint.</div>
-      <div class="step-tech">Flask · .h5 model</div>
+      <div class="step-tech">Flask &middot; .h5 model</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO USE -->
+<section id="usage">
+  <div class="section-label">Quick Start</div>
+  <h2 class="section-title">Run It Locally</h2>
+  <div class="usage-grid">
+    <div class="usage-steps">
+      <div class="usage-step fade-in">
+        <div class="step-indicator">1</div>
+        <div>
+          <div class="usage-step-title">Clone &amp; Install</div>
+          <div class="usage-step-desc">git clone, create venv, pip install -r requirements.txt</div>
+        </div>
+      </div>
+      <div class="usage-step fade-in">
+        <div class="step-indicator">2</div>
+        <div>
+          <div class="usage-step-title">Place Model</div>
+          <div class="usage-step-desc">Download waste_classification_model.h5 and class_names.json to root</div>
+        </div>
+      </div>
+      <div class="usage-step fade-in">
+        <div class="step-indicator">3</div>
+        <div>
+          <div class="usage-step-title">Launch</div>
+          <div class="usage-step-desc">python app.py &mdash; Flask serves on http://localhost:5000</div>
+        </div>
+      </div>
+      <div class="usage-step fade-in">
+        <div class="step-indicator">4</div>
+        <div>
+          <div class="usage-step-title">Classify</div>
+          <div class="usage-step-desc">Upload any waste image. Get instant classification + disposal guidance.</div>
+        </div>
+      </div>
+    </div>
+    <div class="file-structure">
+<span class="fs-dir">EcoSort-AI/</span>
+<span class="fs-file">  app.py</span>              <span class="fs-comment"># Flask backend</span>
+<span class="fs-file">  requirements.txt</span>    <span class="fs-comment"># Dependencies</span>
+<span class="fs-file">  waste_classification_model.h5</span>
+<span class="fs-file">  class_names.json</span>
+<span class="fs-dir">  templates/</span>
+<span class="fs-file">    index.html</span>        <span class="fs-comment"># This page</span>
+<span class="fs-file">    login.html</span>        <span class="fs-comment"># Auth: sign in</span>
+<span class="fs-file">    register.html</span>     <span class="fs-comment"># Auth: sign up</span>
+<span class="fs-dir">  static/</span>
+<span class="fs-file">    (assets)</span>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="footer-logo">EcoSort<span style="color:var(--lime)">AI</span></div>
-  <div class="footer-text">MobileNetV2 · 30 Classes · 82.40% Accuracy</div>
-  <div class="footer-text">Flask + TensorFlow · 15,000 Images</div>
+  <div class="footer-text">MobileNetV2 &middot; 30 Classes &middot; 82.40% Accuracy</div>
+  <div class="footer-text">Flask + TensorFlow &middot; 15,000 Images</div>
 </footer>
 
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <script>
-// ── Cursor ───────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+//  AUTH STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let currentUser = null;
+let isAuthenticated = false;
+
+async function checkAuth() {
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    isAuthenticated = data.authenticated;
+    currentUser = data.user || null;
+    updateNav();
+    updateUploadZone();
+  } catch (e) {
+    isAuthenticated = false;
+    currentUser = null;
+    updateNav();
+    updateUploadZone();
+  }
+}
+
+function updateNav() {
+  const navAuth = document.getElementById('navAuth');
+  if (isAuthenticated && currentUser) {
+    const initial = currentUser.username.charAt(0).toUpperCase();
+    navAuth.innerHTML = `
+      <div class="nav-user">
+        <div class="user-avatar">${initial}</div>
+        <span>${currentUser.username}</span>
+      </div>
+      <button class="nav-btn" onclick="handleLogout()">Sign Out</button>
+    `;
+  } else {
+    navAuth.innerHTML = `
+      <a href="/login" class="nav-btn">Sign In</a>
+      <a href="/register" class="nav-btn nav-btn-primary">Get Started</a>
+    `;
+  }
+}
+
+function updateUploadZone() {
+  const authGate = document.getElementById('authGate');
+  if (!isAuthenticated) {
+    authGate.classList.add('visible');
+  } else {
+    authGate.classList.remove('visible');
+  }
+}
+
+async function handleLogout() {
+  try {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    showToast('Signed out successfully', 'success');
+    setTimeout(() => { window.location.reload(); }, 800);
+  } catch (e) {
+    showToast('Logout failed', 'error');
+  }
+}
+
+function showToast(message, type) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = 'toast toast-' + type;
+  setTimeout(() => toast.classList.add('visible'), 10);
+  setTimeout(() => toast.classList.remove('visible'), 3000);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  CURSOR
+// ═══════════════════════════════════════════════════════════════════════════════
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');
 let mx=0, my=0, rx=0, ry=0;
@@ -448,14 +621,18 @@ document.addEventListener('mousemove', e => {
   requestAnimationFrame(animRing);
 })();
 
-// ── Fade-in observer ─────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+//  FADE-IN OBSERVER
+// ═══════════════════════════════════════════════════════════════════════════════
 const obs = new IntersectionObserver(
   es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }),
   { threshold: .1 }
 );
 document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 
-// ── Smooth scroll ─────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SMOOTH SCROLL
+// ═══════════════════════════════════════════════════════════════════════════════
 document.querySelectorAll('a[href^="#"]').forEach(a =>
   a.addEventListener('click', e => {
     e.preventDefault();
@@ -463,7 +640,9 @@ document.querySelectorAll('a[href^="#"]').forEach(a =>
   })
 );
 
-// ── Classifier logic ──────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+//  CLASSIFIER LOGIC
+// ═══════════════════════════════════════════════════════════════════════════════
 const zone        = document.getElementById('uploadZone');
 const fileInput   = document.getElementById('fileInput');
 const previewImg  = document.getElementById('previewImg');
@@ -482,15 +661,26 @@ const errorMsg    = document.getElementById('errorMsg');
 
 let selectedFile = null;
 
-zone.addEventListener('click', () => fileInput.click());
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragging'); });
+zone.addEventListener('click', (e) => {
+  if (!isAuthenticated) return;
+  fileInput.click();
+});
+zone.addEventListener('dragover', e => {
+  if (!isAuthenticated) return;
+  e.preventDefault();
+  zone.classList.add('dragging');
+});
 zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
 zone.addEventListener('drop', e => {
-  e.preventDefault(); zone.classList.remove('dragging');
+  if (!isAuthenticated) return;
+  e.preventDefault();
+  zone.classList.remove('dragging');
   const f = e.dataTransfer.files[0];
   if (f && f.type.startsWith('image/')) setFile(f);
 });
-fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) setFile(fileInput.files[0]);
+});
 
 function setFile(file) {
   selectedFile = file;
@@ -509,6 +699,11 @@ btnClassify.addEventListener('click', classify);
 
 async function classify() {
   if (!selectedFile) return;
+  if (!isAuthenticated) {
+    window.location.href = '/login?next=/';
+    return;
+  }
+
   btnClassify.style.display = 'none';
   loadingArea.style.display = 'flex';
   resultArea.style.display  = 'none';
@@ -519,6 +714,14 @@ async function classify() {
 
   try {
     const res  = await fetch('/predict', { method:'POST', body: fd });
+
+    if (res.status === 401) {
+      loadingArea.style.display = 'none';
+      showToast('Session expired. Please sign in again.', 'error');
+      setTimeout(() => { window.location.href = '/login?next=/'; }, 1500);
+      return;
+    }
+
     const data = await res.json();
     loadingArea.style.display = 'none';
 
@@ -526,13 +729,13 @@ async function classify() {
 
     resultTag.style.borderColor = data.best.color + '55';
     resultTag.style.background  = data.best.color + '18';
-    resultLabel.textContent = `${data.best.disposal} — ${data.best.label}`;
-    resultConf.textContent  = `${data.best.confidence}% confident`;
+    resultLabel.textContent = data.best.disposal + ' — ' + data.best.label;
+    resultConf.textContent  = data.best.confidence + '% confident';
     resultTip.textContent   = data.best.tip;
 
     resultBars.innerHTML = '';
+    const colors = ['var(--green)','var(--lime)','var(--amber)','var(--blue)','var(--muted)'];
     data.top5.forEach((item, i) => {
-      const colors = ['var(--green)','var(--lime)','var(--amber)','var(--blue)','var(--muted)'];
       resultBars.innerHTML += `
         <div class="result-bar">
           <div class="bar-header">
@@ -546,10 +749,11 @@ async function classify() {
     });
 
     resultArea.style.display = 'block';
+    showToast('Classification complete', 'success');
 
   } catch(err) {
     loadingArea.style.display = 'none';
-    errorMsg.textContent = '⚠ ' + (err.message || 'Could not connect to Flask server. Make sure app.py is running.');
+    errorMsg.textContent = '⚠ ' + (err.message || 'Could not connect to server.');
     errorMsg.style.display    = 'block';
     btnClassify.style.display = 'block';
   }
@@ -566,6 +770,10 @@ btnReset.addEventListener('click', () => {
   resultArea.style.display  = 'none';
   errorMsg.style.display    = 'none';
 });
+
+// Initialize
+checkAuth();
 </script>
+
 </body>
 </html>
